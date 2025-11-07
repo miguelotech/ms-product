@@ -1,0 +1,17 @@
+server:
+  port: 8081
+
+spring:
+
+  application:
+    name: ms-product
+
+  r2dbc:
+    url: r2dbc:postgresql://db-products:5432/products_db?currentSchema=public
+    username: postgres
+    password: admin
+
+  sql:
+    init:
+      mode: always
+      platform: postgres
