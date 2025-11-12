@@ -9,9 +9,3 @@ spring:
     # import: optional:configserver:http://root:s3cr3t@localhost:8888
     # Si estas usando Docker:
     import: optional:configserver:http://root:s3cr3t@ms-config-server:8888
-
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:9050
