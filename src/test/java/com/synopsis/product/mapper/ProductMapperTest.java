@@ -51,4 +51,18 @@ class ProductMapperTest {
         assertThat(response.activo()).isTrue();
         assertThat(response.fechaCreacion()).isEqualTo(createdAt);
     }
+
+    @Test
+    void ensureCreationDateKeepsExistingValue() {
+        LocalDateTime existingCreationDate = LocalDateTime.now().minusWeeks(1);
+        Product product = Product.builder()
+                .nombre("Monitor")
+                .descripcion("24 pulgadas")
+                .fechaCreacion(existingCreationDate)
+                .build();
+
+        mapper.ensureCreationDate(product);
+
+        assertThat(product.getFechaCreacion()).isEqualTo(existingCreationDate);
+    }
 }
