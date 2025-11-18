@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "fechaCreacion", ignore = true)
     Product toEntity(ProductRequest request);
     ProductResponse toResponse(Product entity);
 
