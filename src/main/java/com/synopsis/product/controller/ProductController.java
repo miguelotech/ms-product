@@ -33,7 +33,7 @@ public class ProductController {
         return service.save(request)
                 .map(saved -> ResponseEntity.status(HttpStatus.CREATED).body(saved));
     }
-
+    //borrar
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> delete(@PathVariable Long id) {
         return service.delete(id)
