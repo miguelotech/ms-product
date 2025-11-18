@@ -1,8 +1,11 @@
 package com.synopsis.product.mapper;
 
-import com.synopsis.product.entity.dto.*;
 import com.synopsis.product.entity.Product;
-import org.mapstruct.*;
+import com.synopsis.product.entity.dto.ProductRequest;
+import com.synopsis.product.entity.dto.ProductResponse;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring")
@@ -11,11 +14,10 @@ public interface ProductMapper {
     Product toEntity(ProductRequest request);
     ProductResponse toResponse(Product entity);
 
-    //después del mapeo si no hay fecha pasa la actual
     @AfterMapping
-    default void setFechaCreacion(@MappingTarget Product product) {
-        if (product.getFechaCreacion() == null) {
-            product.setFechaCreacion(LocalDateTime.now());
+    default void ensureCreationDate(@MappingTarget Product.ProductBuilder builder) {
+        if (builder.build().getFechaCreacion() == null) {
+            builder.fechaCreacion(LocalDateTime.now());
         }
     }
 }
