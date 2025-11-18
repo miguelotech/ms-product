@@ -1,0 +1,50 @@
+name: ms-product-sonar
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'ms-product/**'
+      - '.github/workflows/ms-product-sonar.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'ms-product/**'
+      - '.github/workflows/ms-product-sonar.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY_MS_PRODUCT }}
+      SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for Gradle
+        run: chmod +x gradlew
+        working-directory: ms-product
+
+      - name: Test, coverage and SonarCloud
+        working-directory: ms-product
+        env:
+          SONAR_PROJECT_KEY: ${{ env.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ env.SONAR_ORGANIZATION }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+        run: |
+          ./gradlew clean test jacocoTestReport sonarqube \
+            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+            -Dsonar.organization=$SONAR_ORGANIZATION \
+            -Dsonar.token=$SONAR_TOKEN \
+            -Dsonar.host.url=https://sonarcloud.io
