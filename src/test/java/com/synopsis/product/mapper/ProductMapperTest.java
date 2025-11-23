@@ -1,8 +1,8 @@
 package com.synopsis.product.mapper;
 
 import com.synopsis.product.entity.Product;
-import com.synopsis.product.entity.dto.ProductRequest;
-import com.synopsis.product.entity.dto.ProductResponse;
+import com.synopsis.product.openapi.dto.ProductRequest;
+import com.synopsis.product.openapi.dto.ProductResponse;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -16,12 +16,17 @@ class ProductMapperTest {
 
     @Test
     void toEntityInitializesCreationDate() {
-        ProductRequest request = new ProductRequest("Mouse", "Inalámbrico", 35.0, 20, true);
+        ProductRequest request = new ProductRequest()
+                .nombre("Mouse")
+                .descripcion("Inalambrico")
+                .precio(35.0)
+                .stock(20)
+                .activo(true);
 
         Product entity = mapper.toEntity(request);
 
         assertThat(entity.getNombre()).isEqualTo("Mouse");
-        assertThat(entity.getDescripcion()).isEqualTo("Inalámbrico");
+        assertThat(entity.getDescripcion()).isEqualTo("Inalambrico");
         assertThat(entity.getPrecio()).isEqualTo(35.0);
         assertThat(entity.getStock()).isEqualTo(20);
         assertThat(entity.getActivo()).isTrue();
@@ -34,7 +39,7 @@ class ProductMapperTest {
         Product entity = Product.builder()
                 .id(9L)
                 .nombre("Teclado")
-                .descripcion("Mecánico")
+                .descripcion("Mecanico")
                 .precio(120.0)
                 .stock(15)
                 .activo(true)
@@ -43,13 +48,13 @@ class ProductMapperTest {
 
         ProductResponse response = mapper.toResponse(entity);
 
-        assertThat(response.id()).isEqualTo(9L);
-        assertThat(response.nombre()).isEqualTo("Teclado");
-        assertThat(response.descripcion()).isEqualTo("Mecánico");
-        assertThat(response.precio()).isEqualTo(120.0);
-        assertThat(response.stock()).isEqualTo(15);
-        assertThat(response.activo()).isTrue();
-        assertThat(response.fechaCreacion()).isEqualTo(createdAt);
+        assertThat(response.getId()).isEqualTo(9L);
+        assertThat(response.getNombre()).isEqualTo("Teclado");
+        assertThat(response.getDescripcion()).isEqualTo("Mecanico");
+        assertThat(response.getPrecio()).isEqualTo(120.0);
+        assertThat(response.getStock()).isEqualTo(15);
+        assertThat(response.getActivo()).isTrue();
+        assertThat(response.getFechaCreacion()).isEqualTo(createdAt);
     }
 
     @Test

@@ -1,0 +1,156 @@
+openapi: 3.0.1
+info:
+  title: Product Service API
+  version: 1.0.0
+  description: API para gestionar productos
+servers:
+  - url: /
+    description: Servidor por defecto
+tags:
+  - name: Productos
+    description: Operaciones del catalogo
+paths:
+  /api/products:
+    get:
+      summary: Lista todos los productos
+      tags:
+        - Productos
+      responses:
+        "200":
+          description: Productos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductResponse"
+    post:
+      summary: Crea un nuevo producto
+      tags:
+        - Productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductRequest"
+      responses:
+        "201":
+          description: Producto creado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResponse"
+        "400":
+          description: Peticion invalida
+  /api/products/{id}:
+    get:
+      summary: Obtiene un producto por id
+      tags:
+        - Productos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador del producto
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResponse"
+        "404":
+          description: Producto no encontrado
+    delete:
+      summary: Elimina un producto por id
+      tags:
+        - Productos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador del producto
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Eliminado
+        "404":
+          description: Producto no encontrado
+components:
+  schemas:
+    ProductRequest:
+      type: object
+      required:
+        - nombre
+        - precio
+        - stock
+      properties:
+        nombre:
+          type: string
+          description: Nombre del producto
+          minLength: 1
+          example: Laptop
+        descripcion:
+          type: string
+          description: Descripcion corta
+          example: Equipo portatil 16"
+        precio:
+          type: number
+          format: double
+          description: Precio unitario
+          minimum: 0
+          exclusiveMinimum: true
+          example: 1299.90
+        stock:
+          type: integer
+          format: int32
+          description: Unidades disponibles
+          minimum: 0
+          example: 5
+        activo:
+          type: boolean
+          description: Disponible para la venta
+          default: true
+          example: true
+    ProductResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        nombre:
+          type: string
+          description: Nombre del producto
+          example: Laptop
+        descripcion:
+          type: string
+          description: Descripcion corta
+          example: Equipo portatil 16"
+        precio:
+          type: number
+          format: double
+          description: Precio unitario
+          example: 1299.90
+        stock:
+          type: integer
+          format: int32
+          description: Unidades disponibles
+          example: 5
+        activo:
+          type: boolean
+          description: Disponible para la venta
+          example: true
+        fechaCreacion:
+          type: string
+          format: date-time
+          description: Fecha de creacion del registro
+          readOnly: true
+          example: 2025-11-18T12:00:00
+          x-java-type: java.time.LocalDateTime

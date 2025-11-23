@@ -1,10 +1,10 @@
 package com.synopsis.product.service;
 
 import com.synopsis.product.entity.Product;
-import com.synopsis.product.entity.dto.ProductRequest;
-import com.synopsis.product.entity.dto.ProductResponse;
-import com.synopsis.product.repository.ProductRepository;
 import com.synopsis.product.mapper.ProductMapper;
+import com.synopsis.product.openapi.dto.ProductRequest;
+import com.synopsis.product.openapi.dto.ProductResponse;
+import com.synopsis.product.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,15 +45,13 @@ class ProductServiceTest {
                 .stock(5)
                 .activo(true)
                 .build();
-        ProductResponse response = new ProductResponse(
-                entity.getId(),
-                entity.getNombre(),
-                entity.getDescripcion(),
-                entity.getPrecio(),
-                entity.getStock(),
-                entity.getActivo(),
-                null
-        );
+        ProductResponse response = new ProductResponse()
+                .id(1L)
+                .nombre("Laptop")
+                .descripcion("Gamer")
+                .precio(1500.0)
+                .stock(5)
+                .activo(true);
 
         when(repository.findAll()).thenReturn(Flux.just(entity));
         when(mapper.toResponse(entity)).thenReturn(response);
@@ -69,8 +67,7 @@ class ProductServiceTest {
     @Test
     void findByIdPropagatesRepositoryResult() {
         Product entity = Product.builder().id(7L).nombre("Mouse").build();
-        ProductResponse response = new ProductResponse(
-                entity.getId(), entity.getNombre(), null, null, null, null, null);
+        ProductResponse response = new ProductResponse().id(7L).nombre("Mouse");
 
         when(repository.findById(7L)).thenReturn(Mono.just(entity));
         when(repository.findById(8L)).thenReturn(Mono.empty());
@@ -88,10 +85,21 @@ class ProductServiceTest {
 
     @Test
     void savePersistsEntityAndReturnsResponse() {
-        ProductRequest request = new ProductRequest("Teclado", "Mecánico", 99.0, 10, true);
+        ProductRequest request = new ProductRequest()
+                .nombre("Teclado")
+                .descripcion("Mecanico")
+                .precio(99.0)
+                .stock(10)
+                .activo(true);
         Product toPersist = Product.builder().nombre("Teclado").build();
         Product saved = Product.builder().id(3L).nombre("Teclado").build();
-        ProductResponse expected = new ProductResponse(3L, "Teclado", "Mecánico", 99.0, 10, true, null);
+        ProductResponse expected = new ProductResponse()
+                .id(3L)
+                .nombre("Teclado")
+                .descripcion("Mecanico")
+                .precio(99.0)
+                .stock(10)
+                .activo(true);
 
         when(mapper.toEntity(request)).thenReturn(toPersist);
         when(repository.save(toPersist)).thenReturn(Mono.just(saved));

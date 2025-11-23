@@ -1,7 +1,7 @@
 package com.synopsis.product.controller;
 
-import com.synopsis.product.entity.dto.ProductRequest;
-import com.synopsis.product.entity.dto.ProductResponse;
+import com.synopsis.product.openapi.dto.ProductRequest;
+import com.synopsis.product.openapi.dto.ProductResponse;
 import com.synopsis.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class ProductControllerTest {
 
     @Test
     void getAllReturnsFluxFromService() {
-        ProductResponse response = new ProductResponse(1L, "Laptop", null, null, null, null, null);
+        ProductResponse response = new ProductResponse().id(1L).nombre("Laptop");
         when(service.findAll()).thenReturn(Flux.just(response));
 
         StepVerifier.create(controller.getAll())
@@ -44,7 +44,7 @@ class ProductControllerTest {
 
     @Test
     void getByIdWrapsResponseEntity() {
-        ProductResponse response = new ProductResponse(7L, "Mouse", null, null, null, null, null);
+        ProductResponse response = new ProductResponse().id(7L).nombre("Mouse");
         when(service.findById(7L)).thenReturn(Mono.just(response));
         when(service.findById(8L)).thenReturn(Mono.empty());
 
@@ -62,9 +62,18 @@ class ProductControllerTest {
 
     @Test
     void createMapsCreatedStatus() {
-        ProductRequest request = new ProductRequest("Monitor", null, 400.0, 4, true);
-        ProductResponse saved = new ProductResponse(10L, "Monitor", null, 400.0, 4, true, null);
-        when(service.save(request)).thenReturn(Mono.just(saved));
+        ProductRequest request = new ProductRequest()
+                .nombre("Monitor")
+                .precio(400.0)
+                .stock(4)
+                .activo(true);
+        ProductResponse saved = new ProductResponse()
+                .id(10L)
+                .nombre("Monitor")
+                .precio(400.0)
+                .stock(4)
+                .activo(true);
+        when(service.save(any(ProductRequest.class))).thenReturn(Mono.just(saved));
 
         StepVerifier.create(controller.create(request))
                 .assertNext(entity -> {

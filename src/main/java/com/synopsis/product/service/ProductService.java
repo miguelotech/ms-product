@@ -1,10 +1,10 @@
 package com.synopsis.product.service;
 
 import com.synopsis.product.entity.Product;
-import com.synopsis.product.entity.dto.*;
 import com.synopsis.product.mapper.ProductMapper;
+import com.synopsis.product.openapi.dto.ProductRequest;
+import com.synopsis.product.openapi.dto.ProductResponse;
 import com.synopsis.product.repository.ProductRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.*;

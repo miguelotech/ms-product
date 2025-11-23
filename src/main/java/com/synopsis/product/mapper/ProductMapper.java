@@ -1,8 +1,8 @@
 package com.synopsis.product.mapper;
 
 import com.synopsis.product.entity.Product;
-import com.synopsis.product.entity.dto.ProductRequest;
-import com.synopsis.product.entity.dto.ProductResponse;
+import com.synopsis.product.openapi.dto.ProductRequest;
+import com.synopsis.product.openapi.dto.ProductResponse;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
@@ -16,6 +16,7 @@ public interface ProductMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "fechaCreacion", ignore = true)
     Product toEntity(ProductRequest request);
+
     ProductResponse toResponse(Product entity);
 
     @AfterMapping
